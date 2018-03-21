@@ -25,5 +25,6 @@
     </jdbc:embedded-database>
 
     <import resource="classpath:services.xml"/>
+    <import resource="classpath:handlers.xml"/>
 
 </beans>
