@@ -8,10 +8,10 @@ public class Player {
     Integer id;
     Long chatId;
     String nickname;
-    Integer team;
+    Team team;
     Long gold;
 
-    public Player(Integer id, Long chatId, String nickname, Integer team, Long gold) {
+    public Player(Integer id, Long chatId, String nickname, Team team, Long gold) {
         this.id = id;
         this.chatId = chatId;
         this.nickname = nickname;
@@ -43,11 +43,11 @@ public class Player {
         this.nickname = nickname;
     }
 
-    public Integer getTeam() {
+    public Team getTeam() {
         return this.team;
     }
 
-    public void setTeam(Integer team) {
+    public void setTeam(Team team) {
         this.team = team;
     }
 
@@ -66,7 +66,7 @@ public class Player {
         public Player mapRow(ResultSet rs, int rowNum) {
             try {
                 return new Player(rs.getInt("ID"), rs.getLong("CHAT_ID"),
-                        rs.getString("NICKNAME"), rs.getInt("TEAM"),
+                        rs.getString("NICKNAME"), Team.valueOf(rs.getInt("TEAM")),
                         rs.getLong("GOLD"));
             } catch (SQLException e) {
                 return null;

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.chatbot.warships.entity.Player;
+import ru.chatbot.warships.entity.Team;
 
 public class PlayerService {
     @Autowired
@@ -25,8 +26,8 @@ public class PlayerService {
         }
     }
 
-    public void createPlayer(Integer userId, Long chatId, String nickname, Integer team) throws DataAccessException {
-        jdbcTemplate.update(INSERT_PLAYER_SQL, userId, chatId, nickname, team);
+    public void createPlayer(Integer userId, Long chatId, String nickname, Team team) throws DataAccessException {
+        jdbcTemplate.update(INSERT_PLAYER_SQL, userId, chatId, nickname, team.getTeamId());
     }
 
     public void setNickname(Integer playerId, String nickname) {
