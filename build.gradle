@@ -11,5 +11,13 @@ repositories {
 
 dependencies {
     compile 'org.telegram:telegrambots:2.4.4'
+
+    compile 'org.springframework:spring-core:4.3.6.RELEASE'
+    compile 'org.springframework:spring-context:4.3.6.RELEASE'
+    compile 'org.springframework:spring-context-support:4.3.6.RELEASE'
+    compile 'org.springframework:spring-core:4.3.6.RELEASE'
+    compile 'org.springframework:spring-jdbc:4.3.6.RELEASE'
+    compile 'org.springframework:spring-web:4.3.6.RELEASE'
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

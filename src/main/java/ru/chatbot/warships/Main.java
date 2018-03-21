@@ -1,5 +1,7 @@
 package ru.chatbot.warships;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
@@ -10,10 +12,12 @@ public class Main {
         ApiContextInitializer.init();
         TelegramBotsApi botsApi = new TelegramBotsApi();
 
+        ApplicationContext context =
+                new ClassPathXmlApplicationContext("beans.xml");
 
         try {
-            WarshipsBot warshipBot = new WarshipsBot();
-            botsApi.registerBot(warshipBot);
+            WarshipsBot warshipsBot = (WarshipsBot) context.getBean("warshipsBot");
+            botsApi.registerBot(warshipsBot);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
