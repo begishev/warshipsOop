@@ -23,4 +23,6 @@
 
     <bean id="shipService" class="ru.chatbot.warships.service.ShipService"/>
 
+    <bean id="voyageService" class="ru.chatbot.warships.service.VoyageService"/>
+
 </beans>
