@@ -19,4 +19,8 @@
 
     <bean id="playerService" class="ru.chatbot.warships.service.PlayerService"/>
 
+    <bean id="portService" class="ru.chatbot.warships.service.PortService"/>
+
+    <bean id="shipService" class="ru.chatbot.warships.service.ShipService"/>
+
 </beans>

@@ -13,9 +13,11 @@
 
     <context:component-scan base-package="ru.chatbot.warships"/>
 
-    <bean id="chooseTeamHandler" class="ru.chatbot.warships.handler.ChooseTeamHandler">
-    </bean>
+    <bean id="chooseTeamHandler" class="ru.chatbot.warships.handler.ChooseTeamHandler"/>
     <bean id="defaultHandler" class="ru.chatbot.warships.handler.DefaultHandler"/>
+    <bean id="playerInfoHandler" class="ru.chatbot.warships.handler.PlayerInfoHandler"/>
+    <bean id="changeNicknameHandler" class="ru.chatbot.warships.handler.ChangeNicknameHandler"/>
+    <bean id="renameShipHandler" class="ru.chatbot.warships.handler.RenameShipHandler"/>
 
     <bean id="handlers" class="java.util.ArrayList">
     <constructor-arg>
@@ -25,6 +27,9 @@
             <!--This handler must be first one!-->
             <!--Don't place anything above it!-->
             <ref bean="chooseTeamHandler"/>
+            <ref bean="playerInfoHandler"/>
+            <ref bean="changeNicknameHandler"/>
+            <ref bean="renameShipHandler"/>
             <ref bean="defaultHandler"/>
             <!--This handler must be the last one!-->
             <!--Don't place anything below it!-->
