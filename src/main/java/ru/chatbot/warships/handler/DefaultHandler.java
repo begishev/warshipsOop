@@ -2,6 +2,10 @@ package ru.chatbot.warships.handler;
 
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
+import ru.chatbot.warships.resources.EasyConstructableKeyboard;
+import ru.chatbot.warships.resources.Message;
+
+import java.util.Arrays;
 
 public class DefaultHandler implements Handler {
     @Override
@@ -11,6 +15,7 @@ public class DefaultHandler implements Handler {
 
     @Override
     public SendMessage handle(Update update) {
-        return new SendMessage().setChatId(update.getMessage().getChatId()).setText("Default response");
+        return Message.makeReplyMessage(update, Message.getCreditsMessage(),
+                new EasyConstructableKeyboard(Arrays.asList("INFO", "VOYAGE")));
     }
 }
