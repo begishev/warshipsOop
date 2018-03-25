@@ -18,6 +18,11 @@
     <bean id="playerInfoHandler" class="ru.chatbot.warships.handler.PlayerInfoHandler"/>
     <bean id="changeNicknameHandler" class="ru.chatbot.warships.handler.ChangeNicknameHandler"/>
     <bean id="renameShipHandler" class="ru.chatbot.warships.handler.RenameShipHandler"/>
+    <bean id="voyageHandler" class="ru.chatbot.warships.handler.VoyageHandler"/>
+    <bean id="travelPreparationHandler" class="ru.chatbot.warships.handler.TravelPreparationHandler"/>
+    <bean id="travelHandler" class="ru.chatbot.warships.handler.TravelHandler"/>
+    <bean id="tradePreparationHandler" class="ru.chatbot.warships.handler.TradePreparationHandler"/>
+    <bean id="tradeHandler" class="ru.chatbot.warships.handler.TradeHandler"/>
 
     <bean id="handlers" class="java.util.ArrayList">
     <constructor-arg>
@@ -30,6 +35,11 @@
             <ref bean="playerInfoHandler"/>
             <ref bean="changeNicknameHandler"/>
             <ref bean="renameShipHandler"/>
+            <ref bean="voyageHandler"/>
+            <ref bean="travelPreparationHandler"/>
+            <ref bean="travelHandler"/>
+            <ref bean="tradePreparationHandler"/>
+            <ref bean="tradeHandler"/>
             <ref bean="defaultHandler"/>
             <!--This handler must be the last one!-->
             <!--Don't place anything below it!-->
