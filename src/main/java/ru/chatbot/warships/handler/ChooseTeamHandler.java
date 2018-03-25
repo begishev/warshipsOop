@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
 import ru.chatbot.warships.entity.Team;
+import ru.chatbot.warships.resources.EasyConstructableKeyboard;
+import ru.chatbot.warships.resources.Message;
 import ru.chatbot.warships.service.PlayerService;
 
 import java.util.Arrays;
@@ -34,9 +36,11 @@ public class ChooseTeamHandler implements Handler {
         if (teamNames.contains(message)) {
             Team team = Team.valueOf(message);
             playerService.createPlayer(userID, update.getMessage().getChatId(), nickname, team);
-            return new SendMessage().setChatId(update.getMessage().getChatId()).setText("You successfully joined team " + team.toString());
+            return Message.makeReplyMessage(update, Message.getJoinTeamMessage(team),
+                    new EasyConstructableKeyboard(Arrays.asList("INFO", "VOYAGE")));
         } else {
-            return new SendMessage().setChatId(update.getMessage().getChatId()).setText("Team with this name does not exist");
+            return Message.makeReplyMessage(update, Message.getSelectTeamMessage(Arrays.asList(Team.values())),
+                    new EasyConstructableKeyboard(teamNames));
         }
     }
 }
