@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
 import ru.chatbot.warships.entity.Team;
-import ru.chatbot.warships.resources.EasyConstructableKeyboard;
+import ru.chatbot.warships.resources.ReplyKeyboardMarkupFactory;
 import ru.chatbot.warships.resources.Message;
 import ru.chatbot.warships.service.PlayerService;
 
@@ -18,6 +18,13 @@ public class ChooseTeamHandler implements Handler {
 
     public void setPlayerService(PlayerService playerService) {
         this.playerService = playerService;
+    }
+
+    @Autowired
+    private ReplyKeyboardMarkupFactory markupFactory;
+
+    public void setMarkupFactory(ReplyKeyboardMarkupFactory markupFactory) {
+        this.markupFactory = markupFactory;
     }
 
     @Override
@@ -37,10 +44,10 @@ public class ChooseTeamHandler implements Handler {
             Team team = Team.valueOf(message);
             playerService.createPlayer(userID, update.getMessage().getChatId(), nickname, team);
             return Message.makeReplyMessage(update, Message.getJoinTeamMessage(team),
-                    new EasyConstructableKeyboard(Arrays.asList("INFO", "VOYAGE")));
+                    markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE")));
         } else {
             return Message.makeReplyMessage(update, Message.getSelectTeamMessage(Arrays.asList(Team.values())),
-                    new EasyConstructableKeyboard(teamNames));
+                    markupFactory.produceKeyboardMarkupWithButtons(teamNames));
         }
     }
 }

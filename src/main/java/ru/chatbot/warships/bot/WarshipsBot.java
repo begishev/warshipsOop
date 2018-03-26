@@ -33,10 +33,10 @@ public class WarshipsBot extends TelegramLongPollingBot {
     }
 
     public String getBotUsername() {
-        return System.getenv().get("BOT_NAME");
+        return "WarshipBot";
     }
 
     public String getBotToken() {
-        return System.getenv().get("BOT_TOKEN");
+        return "318414106:AAHlobbBnD7YpUcEEliTpYwu2VJWyHfQ67A";
     }
 }

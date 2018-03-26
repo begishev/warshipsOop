@@ -3,7 +3,7 @@ package ru.chatbot.warships.handler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
-import ru.chatbot.warships.resources.EasyConstructableKeyboard;
+import ru.chatbot.warships.resources.ReplyKeyboardMarkupFactory;
 import ru.chatbot.warships.resources.Message;
 import ru.chatbot.warships.service.PlayerService;
 
@@ -20,6 +20,13 @@ public class ChangeNicknameHandler implements Handler {
         this.playerService = playerService;
     }
 
+    @Autowired
+    private ReplyKeyboardMarkupFactory markupFactory;
+
+    public void setMarkupFactory(ReplyKeyboardMarkupFactory markupFactory) {
+        this.markupFactory = markupFactory;
+    }
+
     @Override
     public boolean matchCommand(Update update) {
         return nicknamePattern.matcher(update.getMessage().getText()).matches();
@@ -31,6 +38,6 @@ public class ChangeNicknameHandler implements Handler {
         Integer playerId = update.getMessage().getFrom().getId();
         playerService.setNickname(playerId, nickname);
         return Message.makeReplyMessage(update, Message.getChangeNicknameMessage(nickname),
-                new EasyConstructableKeyboard(Arrays.asList("INFO", "VOYAGE")));
+                markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE")));
     }
 }
