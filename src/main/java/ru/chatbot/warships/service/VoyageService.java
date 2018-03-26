@@ -1,13 +1,10 @@
 package ru.chatbot.warships.service;
 
-import org.glassfish.grizzly.utils.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import ru.chatbot.warships.entity.Player;
-import ru.chatbot.warships.entity.Route;
-import ru.chatbot.warships.entity.Ship;
-import ru.chatbot.warships.entity.Voyage;
+import ru.chatbot.warships.entity.*;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -28,21 +25,6 @@ public class VoyageService {
             "where ((TO_PORT = ?) and (FROM_PORT = ?)) " +
             "or " +
             "((FROM_PORT = ?) and (TO_PORT = ?))";
-
-    private final static String GET_VOYAGE_BY_ID_SQL = "select PLAYER_ID, LEADER_ID, START_DATE, FINISH_DATE, " +
-            "FINISHED, TYPE, REWARD from VOYAGE where PLAYER_ ID = ?";
-
-    private final static String INSERT_VOYAGE_SQL = "insert into VOYAGE ( PLAYER_ID, LEADER_ID, START_DATE, FINISH_DATE," +
-            "FINISHED, TYPE, REWARD) values(?, ?, CURRENT_TIMESTAMP , DATE_ADD(CURRENT_TIMESTAMP, ? MINUTE), 0, ?, ?)";
-
-    private final static String GET_PLAYERS_WITH_SAME_LEADER_SQL = "select PLAYER_ID from VOYAGE where (? = LEADER_ID)";
-
-    private final static String UPDATE_ARRIVED_PLAYERS_SQL = "update VOYAGE set FINISHED = 1 where (CURRENT_TIMESTAMP > FINISH_DATE)";
-
-    private final static String GET_ARRIVED_PLAYERS_SQL = "select PLAYER_ID from VOYAGE where (FINISHED = 1)";
-
-    private final static String PREPARE_TO_DELETE_ARRIVED_PLAYERS_SQL = "update VOYAGE set FINISHED = 2 " +
-            "where (FINISHED = 1)";
 
     private final static String START_ARRIVED_TRAVELERS_HANDLING_SQL = "update TRAVEL set STATUS = 1 " +
             "where FINISH_DATE < now() and STATUS = 0";
@@ -71,39 +53,29 @@ public class VoyageService {
             "(PLAYER_ID, LEADER_ID, START_DATE, FINISH_DATE, REWARD, DESTINATION, STATUS) " +
             "values(?, ?, now(), DATEADD('MINUTE', ?, NOW()), ?, ?, 0)";
 
+    private final static String GET_TRAVEL_BY_PLAYER_ID_SQL = "select PLAYER_ID, START_DATE, FINISH_DATE, DESTINATION, STATUS " +
+            "from TRAVEL " +
+            "where PLAYER_ID = ? and STATUS = 0";
+
+    private final static String GET_TRADE_BY_ID_SQL = "select PLAYER_ID, LEADER_ID, START_DATE, FINISH_DATE, REWARD, DESTINATION, STATUS " +
+            "from TRADE " +
+            "where PLAYER_ID = ? and STATUS = 0";
+
     public static Long calculateRouteTime(Long distance, Ship ship) {
         return distance / ship.getSpeed();
     }
 
     public Voyage getVoyage(Player player) {
         try {
-            return jdbcTemplate.queryForObject(GET_VOYAGE_BY_ID_SQL, new Object[]{player.getId()}, new Voyage.VoyageRowMapper());
-        } catch (DataAccessException e) {
-            return null;
-        }
-    }
-
-    public void createVoyage(List<Pair<Player, Integer>> playersWithRewards, Player leader, Integer type, Long duration) {
-        for (Pair<Player, Integer> player : playersWithRewards) {
-            jdbcTemplate.update(INSERT_VOYAGE_SQL, player.getFirst().getId(),
-                    leader.getId(), duration, type, player.getSecond());
-        }
-    }
-
-    public List<Integer> getArrivedPlayers() {
-        try {
-            jdbcTemplate.update(UPDATE_ARRIVED_PLAYERS_SQL);
-            List<Integer> result = jdbcTemplate.queryForList(GET_ARRIVED_PLAYERS_SQL, Integer.class);
-            jdbcTemplate.update(PREPARE_TO_DELETE_ARRIVED_PLAYERS_SQL);
-            return result;
-        } catch (DataAccessException e) {
-            return null;
-        }
-    }
-
-    public List<Integer> getPlayersWithSameLeader(Player player) {
-        try {
-            return jdbcTemplate.queryForList(GET_PLAYERS_WITH_SAME_LEADER_SQL, new Object[]{player.getId()}, Integer.class);
+            return jdbcTemplate.queryForObject(GET_TRAVEL_BY_PLAYER_ID_SQL,
+                    new Object[]{player.getId()}, new Travel.TravelRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            try {
+                return jdbcTemplate.queryForObject(GET_TRADE_BY_ID_SQL,
+                        new Object[]{player.getId()}, new Trade.TradeRowMapper());
+            } catch (DataAccessException ex) {
+                return null;
+            }
         } catch (DataAccessException e) {
             return null;
         }
@@ -120,12 +92,12 @@ public class VoyageService {
         }
     }
 
-    public List<Voyage> startHandlingArrivedTravelers() {
+    public List<Travel> startHandlingArrivedTravelers() {
         try {
             jdbcTemplate.update(START_ARRIVED_TRAVELERS_HANDLING_SQL);
             return jdbcTemplate.queryForList(GET_ARRIVED_TRAVELERS_SQL).stream()
-                    .map(rs -> new Voyage((Integer) rs.get("PLAYER_ID"), (Integer) rs.get("DESTINATION"),
-                            (Timestamp) rs.get("START_DATE"), (Timestamp) rs.get("FINISH_DATE")))
+                    .map(rs -> new Travel((Integer) rs.get("PLAYER_ID"), (Integer) rs.get("DESTINATION"),
+                            (Timestamp) rs.get("START_DATE"), (Timestamp) rs.get("FINISH_DATE"), 1))
                     .collect(Collectors.toList());
         } catch (DataAccessException e) {
             return null;
@@ -147,13 +119,13 @@ public class VoyageService {
         }
     }
 
-    public List<Voyage> startHandlingArrivedTraders() {
+    public List<Trade> startHandlingArrivedTraders() {
         try {
             jdbcTemplate.update(START_ARRIVED_TRADERS_HANDLING_SQL);
             return jdbcTemplate.queryForList(GET_ARRIVED_TRADERS_SQL).stream()
-                    .map(rs -> new Voyage((Integer) rs.get("PLAYER_ID"), (Integer) rs.get("LEADER_ID"),
+                    .map(rs -> new Trade((Integer) rs.get("PLAYER_ID"), (Integer) rs.get("LEADER_ID"),
                             (Integer) rs.get("DESTINATION"), (Timestamp) rs.get("START_DATE"),
-                            (Timestamp) rs.get("FINISH_DATE"), (Integer) rs.get("REWARD")))
+                            (Timestamp) rs.get("FINISH_DATE"), (Integer) rs.get("REWARD"), 1))
                     .collect(Collectors.toList());
         } catch (DataAccessException e) {
             return null;

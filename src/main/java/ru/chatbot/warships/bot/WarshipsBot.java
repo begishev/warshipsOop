@@ -33,10 +33,10 @@ public class WarshipsBot extends TelegramLongPollingBot {
     }
 
     public String getBotUsername() {
-        return "WarshipBot";
+        return "Givorenon1Bot";
     }
 
     public String getBotToken() {
-        return "318414106:AAHlobbBnD7YpUcEEliTpYwu2VJWyHfQ67A";
+            return "584229356:AAEXgm1A8-8pS88ZYR2c0gDmzdBGPlwhHQ0";
     }
 }
