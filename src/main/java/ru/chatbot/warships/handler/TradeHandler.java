@@ -6,6 +6,7 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import ru.chatbot.warships.entity.Player;
 import ru.chatbot.warships.entity.Port;
+import ru.chatbot.warships.entity.Voyage;
 import ru.chatbot.warships.resources.ReplyKeyboardMarkupFactory;
 import ru.chatbot.warships.resources.Message;
 import ru.chatbot.warships.service.PlayerService;
@@ -35,15 +36,15 @@ public class TradeHandler implements Handler {
     @Autowired
     private VoyageService voyageService;
 
+    public void setVoyageService(VoyageService voyageService) {
+        this.voyageService = voyageService;
+    }
+
     @Autowired
     private ReplyKeyboardMarkupFactory markupFactory;
 
     public void setMarkupFactory(ReplyKeyboardMarkupFactory markupFactory) {
         this.markupFactory = markupFactory;
-    }
-
-    public void setVoyageService(VoyageService voyageService) {
-        this.voyageService = voyageService;
     }
 
     @Override
@@ -53,13 +54,18 @@ public class TradeHandler implements Handler {
 
     @Override
     public SendMessage handle(Update update) {
+        ReplyKeyboardMarkup keyboardMarkup =
+                markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE"));
 
         Integer userId = update.getMessage().getFrom().getId();
         Player player = playerService.getPlayer(userId);
+        Voyage voyage = voyageService.getVoyage(player);
+        if (voyage != null) {
+            Port destination = portService.getPort(voyage.getDestination());
+            return Message.makeReplyMessage(update, Message.getAlreadyVoyaging(destination), keyboardMarkup);
+        }
         Integer destinationId = Integer.valueOf(update.getMessage().getText().substring(7));
         Port port = portService.getPort(destinationId);
-        ReplyKeyboardMarkup keyboardMarkup =
-                markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE"));
         if (playerService.getPlayerLocation(player.getId()).equals(port.getId())) {
             return Message.makeReplyMessage(update, Message.getAlreadyHereMessage(port), keyboardMarkup);
         }

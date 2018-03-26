@@ -3,10 +3,7 @@ package ru.chatbot.warships.resources;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboard;
-import ru.chatbot.warships.entity.Player;
-import ru.chatbot.warships.entity.Port;
-import ru.chatbot.warships.entity.Ship;
-import ru.chatbot.warships.entity.Team;
+import ru.chatbot.warships.entity.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -42,6 +39,20 @@ public class Message {
                 "    Tonnage: " + ship.getTonnage().toString() + "\n" +
                 "    Type: " + ship.getTypeName() + "\n" +
                 "You are in " + port.getName();
+    }
+
+    public static String getInfoMessage(Player player, Ship ship, Voyage voyage, Port destination) {
+        return "Your nickname: " + player.getNickname() + "\n" +
+                "Your team: " + player.getTeam().toString() + "\n" +
+                "Your gold: " + player.getGold() + "\n" +
+                "Your ship:" + "\n" +
+                "    Power:   " + ship.getPower().toString() + "\n" +
+                "    Speed:   " + ship.getSpeed().toString() + "\n" +
+                "    Tonnage: " + ship.getTonnage().toString() + "\n" +
+                "    Type: " + ship.getTypeName() + "\n" +
+                "You are en route to " + destination.getName() + "\n" +
+                "You started at " + voyage.getStartTime() + "\n" +
+                "You will arrive at " + voyage.getFinishTime();
     }
 
     public static String getVoyageMessage() {
@@ -93,6 +104,10 @@ public class Message {
         return "You are already in port " + port.getName();
     }
 
+    public static String getAlreadyVoyaging(Port destination) {
+        return "You are already en route to " + destination.getName();
+    }
+
     public static String getTradePreparationMessage(Collection<Port> ports) {
         String msg = "Choose port to trade with:" + "\n";
         for (Port port : ports) {
@@ -116,11 +131,11 @@ public class Message {
     }
 
     public static String getTravelStartedMessage() {
-        return "Your travel has been was pios began gon gen";
+        return "Your travel has began";
     }
 
     public static String getTradeStartedMessage() {
-        return "Your trade has been was pios began gon gen";
+        return "Your trade has began";
     }
 
     public static String getChangeNicknameMessage(String nickname) {

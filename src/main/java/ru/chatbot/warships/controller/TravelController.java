@@ -7,7 +7,7 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import ru.chatbot.warships.bot.WarshipsBot;
 import ru.chatbot.warships.entity.Player;
 import ru.chatbot.warships.entity.Port;
-import ru.chatbot.warships.entity.Voyage;
+import ru.chatbot.warships.entity.Travel;
 import ru.chatbot.warships.resources.ReplyKeyboardMarkupFactory;
 import ru.chatbot.warships.resources.Message;
 import ru.chatbot.warships.service.PlayerService;
@@ -54,8 +54,8 @@ public class TravelController {
     }
 
     public void processTravelArrivals() {
-        List<Voyage> arrivedTravelers = voyageService.startHandlingArrivedTravelers();
-        for (Voyage voyage : arrivedTravelers) {
+        List<Travel> arrivedTravelers = voyageService.startHandlingArrivedTravelers();
+        for (Travel voyage : arrivedTravelers) {
             SendMessage message = this.processTravelArrival(voyage);
             try {
                 warshipsBot.sendMessage(message);
@@ -66,7 +66,7 @@ public class TravelController {
         voyageService.finishHandlingArrivedTravelers();
     }
 
-    private SendMessage processTravelArrival(Voyage voyage) {
+    private SendMessage processTravelArrival(Travel voyage) {
         Player player = playerService.getPlayer(voyage.getPlayerId());
         Port port = portService.getPort(voyage.getDestination());
         ReplyKeyboardMarkup keyboard = markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE"));

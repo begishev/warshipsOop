@@ -7,7 +7,7 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import ru.chatbot.warships.bot.WarshipsBot;
 import ru.chatbot.warships.entity.Player;
 import ru.chatbot.warships.entity.Port;
-import ru.chatbot.warships.entity.Voyage;
+import ru.chatbot.warships.entity.Trade;
 import ru.chatbot.warships.resources.ReplyKeyboardMarkupFactory;
 import ru.chatbot.warships.resources.Message;
 import ru.chatbot.warships.service.PlayerService;
@@ -54,8 +54,8 @@ public class TradeController {
     }
 
     public void processTradeArrivals() {
-        List<Voyage> arrivedTraders = voyageService.startHandlingArrivedTraders();
-        for (Voyage voyage : arrivedTraders) {
+        List<Trade> arrivedTraders = voyageService.startHandlingArrivedTraders();
+        for (Trade voyage : arrivedTraders) {
             SendMessage message = this.processTradeArrival(voyage);
             try {
                 warshipsBot.sendMessage(message);
@@ -66,7 +66,7 @@ public class TradeController {
         voyageService.finishHandlingArrivedTraders();
     }
 
-    private SendMessage processTradeArrival(Voyage voyage) {
+    private SendMessage processTradeArrival(Trade voyage) {
         Player player = playerService.getPlayer(voyage.getPlayerId());
         Port port = portService.getPort(voyage.getDestination());
         SendMessage message;
