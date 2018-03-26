@@ -6,7 +6,7 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import ru.chatbot.warships.entity.Player;
 import ru.chatbot.warships.entity.Port;
-import ru.chatbot.warships.resources.EasyConstructableKeyboard;
+import ru.chatbot.warships.resources.ReplyKeyboardMarkupFactory;
 import ru.chatbot.warships.resources.Message;
 import ru.chatbot.warships.service.PlayerService;
 import ru.chatbot.warships.service.PortService;
@@ -39,6 +39,13 @@ public class TravelHandler implements Handler {
         this.voyageService = voyageService;
     }
 
+    @Autowired
+    private ReplyKeyboardMarkupFactory markupFactory;
+
+    public void setMarkupFactory(ReplyKeyboardMarkupFactory markupFactory) {
+        this.markupFactory = markupFactory;
+    }
+
     @Override
     public boolean matchCommand(Update update) {
         return travelPattern.matcher(update.getMessage().getText()).matches();
@@ -51,7 +58,8 @@ public class TravelHandler implements Handler {
         Player player = playerService.getPlayer(userId);
         Integer destinationId = Integer.valueOf(update.getMessage().getText().substring(8));
         Port port = portService.getPort(destinationId);
-        ReplyKeyboardMarkup keyboardMarkup = new EasyConstructableKeyboard(Arrays.asList("INFO", "VOYAGE"));
+        ReplyKeyboardMarkup keyboardMarkup =
+                markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE"));
         if (playerService.getPlayerLocation(player.getId()).equals(port.getId())) {
             return Message.makeReplyMessage(update, Message.getAlreadyHereMessage(port), keyboardMarkup);
         }

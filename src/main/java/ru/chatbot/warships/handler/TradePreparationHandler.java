@@ -6,6 +6,7 @@ import org.telegram.telegrambots.api.objects.Update;
 import ru.chatbot.warships.entity.Player;
 import ru.chatbot.warships.entity.Port;
 import ru.chatbot.warships.resources.Message;
+import ru.chatbot.warships.resources.ReplyKeyboardMarkupFactory;
 import ru.chatbot.warships.service.PlayerService;
 import ru.chatbot.warships.service.PortService;
 
@@ -24,6 +25,13 @@ public class TradePreparationHandler implements Handler {
 
     public void setPortService(PortService portService) {
         this.portService = portService;
+    }
+
+    @Autowired
+    private ReplyKeyboardMarkupFactory markupFactory;
+
+    public void setMarkupFactory(ReplyKeyboardMarkupFactory markupFactory) {
+        this.markupFactory = markupFactory;
     }
 
     @Override

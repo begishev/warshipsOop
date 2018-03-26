@@ -6,7 +6,7 @@ import org.telegram.telegrambots.api.objects.Update;
 import ru.chatbot.warships.entity.Player;
 import ru.chatbot.warships.entity.Port;
 import ru.chatbot.warships.entity.Ship;
-import ru.chatbot.warships.resources.EasyConstructableKeyboard;
+import ru.chatbot.warships.resources.ReplyKeyboardMarkupFactory;
 import ru.chatbot.warships.resources.Message;
 import ru.chatbot.warships.service.PlayerService;
 import ru.chatbot.warships.service.PortService;
@@ -36,6 +36,13 @@ public class PlayerInfoHandler implements Handler {
         this.portService = portService;
     }
 
+    @Autowired
+    private ReplyKeyboardMarkupFactory markupFactory;
+
+    public void setMarkupFactory(ReplyKeyboardMarkupFactory markupFactory) {
+        this.markupFactory = markupFactory;
+    }
+
     @Override
     public boolean matchCommand(Update update) {
         return update.getMessage().getText().equals("INFO");
@@ -48,7 +55,7 @@ public class PlayerInfoHandler implements Handler {
         Ship ship = shipService.getEmployedShip(userID);
         Port port = portService.getPort(playerService.getPlayerLocation(player.getId()));
         return Message.makeReplyMessage(update, Message.getInfoMessage(player, ship, port),
-                new EasyConstructableKeyboard(Arrays.asList("INFO", "VOYAGE")));
+                markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE")));
 
 
     }
