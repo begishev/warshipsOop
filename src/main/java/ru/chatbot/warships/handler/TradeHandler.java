@@ -78,7 +78,7 @@ public class TradeHandler implements Handler {
 
         try {
             voyageService.createTrade(player, player, playerService.getPlayerLocation(player.getId()), destinationId);
-            return Message.makeReplyMessage(update, Message.getTradeStartedMessage());
+            return Message.makeReplyMessage(update, Message.getTradeStartedMessage(), keyboardMarkup);
         } catch (IllegalArgumentException e) {
             return Message.makeReplyMessage(update, Message.getSorryMessage());
         }

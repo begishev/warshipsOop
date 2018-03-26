@@ -76,7 +76,7 @@ public class TravelHandler implements Handler {
         }
         try {
             voyageService.createTravel(player, playerService.getPlayerLocation(player.getId()), destinationId);
-            return Message.makeReplyMessage(update, Message.getTravelStartedMessage());
+            return Message.makeReplyMessage(update, Message.getTravelStartedMessage(), keyboardMarkup);
         } catch (IllegalArgumentException e) {
             return Message.makeReplyMessage(update, Message.getSorryMessage());
         }

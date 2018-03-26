@@ -121,7 +121,7 @@ public class Message {
         return "You arrived to " + port.getName();
     }
 
-    public static String getTravelPreparrationMessage(Collection<Port> ports) {
+    public static String getTravelPreparationMessage(Collection<Port> ports) {
         String msg = "Choose port to travel to:" + "\n";
         for (Port port : ports) {
             msg += "To travel to port " + port.getName() + " write /travel_" + port.getId() + "\n" +
