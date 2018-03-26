@@ -38,6 +38,6 @@ public class RenameShipHandler implements Handler {
         Integer playerId = update.getMessage().getFrom().getId();
         shipService.renameShip(playerId, name);
         return Message.makeReplyMessage(update, Message.getChangeShipNameMessage(name),
-                markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE")));
+                markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE", "BUY SHIP")));
     }
 }

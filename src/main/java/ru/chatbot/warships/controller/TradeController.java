@@ -70,7 +70,7 @@ public class TradeController {
         Player player = playerService.getPlayer(voyage.getPlayerId());
         Port port = portService.getPort(voyage.getDestination());
         SendMessage message;
-        ReplyKeyboardMarkup keyboard = markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE"));
+        ReplyKeyboardMarkup keyboard = markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE", "BUY SHIP"));
         if (playerService.arrive(player, port)) {
             playerService.giveGold(player, Long.valueOf(voyage.getReward()));
             message = Message.makeReplyMessage(player.getChatId(),

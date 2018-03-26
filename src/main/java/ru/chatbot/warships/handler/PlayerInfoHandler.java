@@ -67,11 +67,11 @@ public class PlayerInfoHandler implements Handler {
         if (voyage == null) {
             Port port = portService.getPort(ship.getLocationId());
             return Message.makeReplyMessage(update, Message.getInfoMessage(player, ship, port),
-                    markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE")));
+                    markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE", "BUY SHIP")));
         } else {
             Port port = portService.getPort(voyage.getDestination());
             return Message.makeReplyMessage(update, Message.getInfoMessage(player, ship, voyage, port),
-                    markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE")));
+                    markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE", "BUY SHIP")));
         }
 
 

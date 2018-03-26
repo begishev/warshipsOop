@@ -69,7 +69,7 @@ public class TravelController {
     private SendMessage processTravelArrival(Travel voyage) {
         Player player = playerService.getPlayer(voyage.getPlayerId());
         Port port = portService.getPort(voyage.getDestination());
-        ReplyKeyboardMarkup keyboard = markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE"));
+        ReplyKeyboardMarkup keyboard = markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE", "BUY SHIP"));
         SendMessage message;
         if (playerService.arrive(player, port)) {
             message = Message.makeReplyMessage(player.getChatId(), Message.getArrivalMessage(port),

@@ -44,7 +44,7 @@ public class ChooseTeamHandler implements Handler {
             Team team = Team.valueOf(message);
             playerService.createPlayer(userID, update.getMessage().getChatId(), nickname, team);
             return Message.makeReplyMessage(update, Message.getJoinTeamMessage(team),
-                    markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE")));
+                    markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE", "BUY SHIP")));
         } else {
             return Message.makeReplyMessage(update, Message.getSelectTeamMessage(Arrays.asList(Team.values())),
                     markupFactory.produceKeyboardMarkupWithButtons(teamNames));
