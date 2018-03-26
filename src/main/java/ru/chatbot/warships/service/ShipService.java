@@ -8,6 +8,8 @@ import ru.chatbot.warships.entity.Port;
 import ru.chatbot.warships.entity.Ship;
 import ru.chatbot.warships.entity.ShipType;
 
+import java.util.List;
+
 public class ShipService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -33,7 +35,9 @@ public class ShipService {
             "where owner_id = ? " +
             "and employed = 1";
     private final static String GET_SHIP_TYPE_SQL = "select ID, NAME, MEAN_SPEED, SPEED_DEVIATION, " +
-            "MEAN_POWER, POWER_DEVIATION, MEAN_TONNAGE, TONNAGE_DEVIATION from SHIP_TYPE where ID = ?";
+            "MEAN_POWER, POWER_DEVIATION, MEAN_TONNAGE, TONNAGE_DEVIATION, PRICE from SHIP_TYPE where ID = ?";
+    private final static String GET_SHIP_TYPES_SQL = "select ID, NAME, MEAN_SPEED, SPEED_DEVIATION, " +
+            "MEAN_POWER, POWER_DEVIATION, MEAN_TONNAGE, TONNAGE_DEVIATION, PRICE from SHIP_TYPE";
 
     private final static String UPDATE_LOCATION_SQL = "update SHIP set LOCATION = ? " +
             "where OWNER_ID = ? and EMPLOYED = 1";
@@ -85,4 +89,21 @@ public class ShipService {
     public void renameShip(Integer playerId, String name) {
         jdbcTemplate.update(RENAME_SHIP_SQL, new Object[]{name, playerId});
     }
+
+    public List<ShipType> getShipTypes() {
+        try {
+            return jdbcTemplate.query(GET_SHIP_TYPES_SQL, new ShipType.ShipTypeRowMapper());
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    public ShipType getShipType(Long shipTypeId) {
+        try {
+            return jdbcTemplate.queryForObject(GET_SHIP_TYPE_SQL, new Object[]{shipTypeId}, new ShipType.ShipTypeRowMapper());
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
 }

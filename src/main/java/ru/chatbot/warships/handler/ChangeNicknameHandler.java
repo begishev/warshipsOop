@@ -38,6 +38,6 @@ public class ChangeNicknameHandler implements Handler {
         Integer playerId = update.getMessage().getFrom().getId();
         playerService.setNickname(playerId, nickname);
         return Message.makeReplyMessage(update, Message.getChangeNicknameMessage(nickname),
-                markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE")));
+                markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE", "BUY SHIP")));
     }
 }

@@ -4,20 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import ru.chatbot.warships.entity.Player;
-import ru.chatbot.warships.entity.Port;
-import ru.chatbot.warships.entity.Voyage;
-import ru.chatbot.warships.resources.ReplyKeyboardMarkupFactory;
+import ru.chatbot.warships.entity.*;
 import ru.chatbot.warships.resources.Message;
+import ru.chatbot.warships.resources.ReplyKeyboardMarkupFactory;
 import ru.chatbot.warships.service.PlayerService;
 import ru.chatbot.warships.service.PortService;
+import ru.chatbot.warships.service.ShipService;
 import ru.chatbot.warships.service.VoyageService;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-public class TravelHandler implements Handler {
-    private Pattern travelPattern = Pattern.compile("\\/travel_(\\d)+");
+public class BuyShipHandler implements Handler {
+    private Pattern tradePattern = Pattern.compile("\\/buy_ship_(\\d)+");
 
     @Autowired
     private PlayerService playerService;
@@ -31,6 +30,13 @@ public class TravelHandler implements Handler {
 
     public void setPortService(PortService portService) {
         this.portService = portService;
+    }
+
+    @Autowired
+    private ShipService shipService;
+
+    public void setShipService(ShipService shipService) {
+        this.shipService = shipService;
     }
 
     @Autowired
@@ -49,36 +55,31 @@ public class TravelHandler implements Handler {
 
     @Override
     public boolean matchCommand(Update update) {
-        return travelPattern.matcher(update.getMessage().getText()).matches();
+        return tradePattern.matcher(update.getMessage().getText()).matches();
     }
 
     @Override
     public SendMessage handle(Update update) {
         ReplyKeyboardMarkup keyboardMarkup =
                 markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE", "BUY SHIP"));
+
         Integer userId = update.getMessage().getFrom().getId();
         Player player = playerService.getPlayer(userId);
         Voyage voyage = voyageService.getVoyage(player);
+        Ship oldShip = shipService.getEmployedShip(player.getId());
+
         if (voyage != null) {
             Port destination = portService.getPort(voyage.getDestination());
             return Message.makeReplyMessage(update, Message.getAlreadyVoyaging(destination), keyboardMarkup);
         }
-        Integer destinationId = Integer.valueOf(update.getMessage().getText().substring(8));
-        Port port = portService.getPort(destinationId);
-        if (playerService.getPlayerLocation(player.getId()).equals(port.getId())) {
-            return Message.makeReplyMessage(update, Message.getAlreadyHereMessage(port), keyboardMarkup);
-        }
-        if (port == null) {
-            return Message.makeReplyMessage(update, Message.getNoSuchPortMessage(), keyboardMarkup);
-        }
-        if (!port.getOwner().equals(player.getTeam())) {
-            return Message.makeReplyMessage(update, Message.getTravelEnemyPort(), keyboardMarkup);
-        }
-        try {
-            voyageService.createTravel(player, playerService.getPlayerLocation(player.getId()), destinationId);
-            return Message.makeReplyMessage(update, Message.getTravelStartedMessage(), keyboardMarkup);
-        } catch (IllegalArgumentException e) {
-            return Message.makeReplyMessage(update, Message.getSorryMessage());
+        Long shipTypeId = Long.valueOf(update.getMessage().getText().substring(10));
+        ShipType shipType = shipService.getShipType(shipTypeId);
+        if (shipType.getPrice() <= player.getGold()) {
+            shipService.createShip("defaultName", player.getId(), shipTypeId, oldShip.getLocationId());
+            Ship newShip = shipService.getEmployedShip(player.getId());
+            return Message.makeReplyMessage(update, Message.getShipBoughtMessage(newShip), keyboardMarkup);
+        } else {
+            return Message.makeReplyMessage(update, Message.getNotEnoughMoneyMessage(), keyboardMarkup);
         }
     }
 }

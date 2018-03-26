@@ -14,9 +14,10 @@ public class ShipType {
     private Long powerDeviation;
     private Long meanTonnage;
     private Long tonnageDeviation;
+    private Long price;
 
     public ShipType(Long id, String name, Long meanSpeed, Long speedDeviation, Long meanPower,
-                    Long powerDeviation, Long meanTonnage, Long tonnageDeviation) {
+                    Long powerDeviation, Long meanTonnage, Long tonnageDeviation, Long price) {
         this.id = id;
         this.name = name;
         this.meanSpeed = meanSpeed;
@@ -25,6 +26,7 @@ public class ShipType {
         this.powerDeviation = powerDeviation;
         this.meanTonnage = meanTonnage;
         this.tonnageDeviation = tonnageDeviation;
+        this.price = price;
     }
 
     public Long getId() {
@@ -91,6 +93,14 @@ public class ShipType {
         this.tonnageDeviation = tonnageDeviation;
     }
 
+    public Long getPrice() {
+        return price;
+    }
+
+    public void setPrice(Long price) {
+        this.price = price;
+    }
+
     public static class ShipTypeRowMapper implements RowMapper<ShipType> {
         public ShipTypeRowMapper() {
         }
@@ -100,7 +110,8 @@ public class ShipType {
                 return new ShipType(rs.getLong("ID"), rs.getString("NAME"),
                         rs.getLong("MEAN_SPEED"), rs.getLong("SPEED_DEVIATION"),
                         rs.getLong("MEAN_POWER"), rs.getLong("POWER_DEVIATION"),
-                        rs.getLong("MEAN_TONNAGE"), rs.getLong("TONNAGE_DEVIATION"));
+                        rs.getLong("MEAN_TONNAGE"), rs.getLong("TONNAGE_DEVIATION"),
+                        rs.getLong("PRICE"));
             } catch (SQLException e) {
                 return null;
             }

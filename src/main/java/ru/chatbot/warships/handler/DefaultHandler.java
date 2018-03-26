@@ -24,6 +24,6 @@ public class DefaultHandler implements Handler {
     @Override
     public SendMessage handle(Update update) {
         return Message.makeReplyMessage(update, Message.getCreditsMessage(),
-                markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE")));
+                markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE", "BUY SHIP")));
     }
 }

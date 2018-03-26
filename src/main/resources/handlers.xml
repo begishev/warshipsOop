@@ -23,6 +23,8 @@
     <bean id="travelHandler" class="ru.chatbot.warships.handler.TravelHandler"/>
     <bean id="tradePreparationHandler" class="ru.chatbot.warships.handler.TradePreparationHandler"/>
     <bean id="tradeHandler" class="ru.chatbot.warships.handler.TradeHandler"/>
+    <bean id="buyShipPreparationHandler" class="ru.chatbot.warships.handler.BuyShipPreparationHandler"/>
+    <bean id="buyShipHandler" class="ru.chatbot.warships.handler.BuyShipHandler"/>
 
     <bean id="handlers" class="java.util.ArrayList">
     <constructor-arg>
@@ -40,6 +42,8 @@
             <ref bean="travelHandler"/>
             <ref bean="tradePreparationHandler"/>
             <ref bean="tradeHandler"/>
+            <ref bean="buyShipPreparationHandler"/>
+            <ref bean="buyShipHandler"/>
             <ref bean="defaultHandler"/>
             <!--This handler must be the last one!-->
             <!--Don't place anything below it!-->

@@ -142,6 +142,31 @@ public class Message {
         return "Your nickname successfully changed to " + nickname;
     }
 
+    public static String getShipBoughtMessage(Ship ship) {
+        return "Your nickname successfully bought new ship with stats:" + "\n" +
+                "    Power:   " + ship.getPower().toString() + "\n" +
+                "    Speed:   " + ship.getSpeed().toString() + "\n" +
+                "    Tonnage: " + ship.getTonnage().toString() + "\n" +
+                "    Type: " + ship.getTypeName();
+    }
+
+    public static String getNotEnoughMoneyMessage() {
+        return "Sorry, you don't have enough money to buy this ship";
+    }
+
+    public static String getBuyShipPreparationMessage(List<ShipType> shipTypes) {
+        String msg = "Choose port to trade with:" + "\n";
+        for (ShipType shipType : shipTypes) {
+            msg += "To buy ship " + shipType.getName() + " write /buy_ship_" + shipType.getId() + "\n" +
+                    "It's approximate stats:" + "\n" +
+                    "    Power:   " + shipType.getMeanPower() + "\n" +
+                    "    Speed:   " + shipType.getMeanSpeed() + "\n" +
+                    "    Tonnage: " + shipType.getMeanTonnage() + "\n" +
+                    "    Price :  " + shipType.getPrice();
+        }
+        return msg;
+    }
+
     public static String getChangeShipNameMessage(String name) {
         return "You renamed ship to " + name;
     }

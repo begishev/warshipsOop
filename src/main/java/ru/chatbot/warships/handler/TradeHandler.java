@@ -55,7 +55,7 @@ public class TradeHandler implements Handler {
     @Override
     public SendMessage handle(Update update) {
         ReplyKeyboardMarkup keyboardMarkup =
-                markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE"));
+                markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE", "BUY SHIP"));
 
         Integer userId = update.getMessage().getFrom().getId();
         Player player = playerService.getPlayer(userId);
