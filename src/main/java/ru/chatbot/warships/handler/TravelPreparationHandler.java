@@ -45,7 +45,7 @@ public class TravelPreparationHandler implements Handler {
         Player player = playerService.getPlayer(userId);
         List<Port> ports = portService.getAllyPorts(playerService.getPlayerLocation(player.getId()), player.getTeam());
         try {
-            return Message.makeReplyMessage(update, Message.getTravelPreparrationMessage(ports));
+            return Message.makeReplyMessage(update, Message.getTravelPreparationMessage(ports));
         } catch (IllegalArgumentException e) {
             return Message.makeReplyMessage(update, Message.getSorryMessage());
         }
