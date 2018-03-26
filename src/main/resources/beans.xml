@@ -21,10 +21,10 @@
     <jdbc:embedded-database id="dataSource" type="H2">
         <jdbc:script location="classpath:schema.sql"/>
         <jdbc:script location="classpath:test_data.sql"/>
-
+        <jdbc:script location="classpath:quartz.sql"/>
     </jdbc:embedded-database>
 
     <import resource="classpath:services.xml"/>
     <import resource="classpath:handlers.xml"/>
-
+    <import resource="classpath:jobs.xml"/>
 </beans>

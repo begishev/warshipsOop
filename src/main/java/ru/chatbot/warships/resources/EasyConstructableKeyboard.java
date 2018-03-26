@@ -6,9 +6,10 @@ import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EasyConstructableKeyboard extends ReplyKeyboardMarkup {
-    public EasyConstructableKeyboard(List<String> buttons) {
+public class ReplyKeyboardMarkupFactory {
+    public ReplyKeyboardMarkup produceKeyboardMarkupWithButtons(List<String> buttons) {
         int rows = (buttons.size() - 1) / 3 + 1;
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         int buttonCount = buttons.size() / rows;
         for (int i = 0; i < rows; i++) {
@@ -22,8 +23,9 @@ public class EasyConstructableKeyboard extends ReplyKeyboardMarkup {
             keyboardRows.get(rows - 1).add(buttons.get(lastIndex));
             lastIndex++;
         }
-        this.setKeyboard(keyboardRows);
-        this.setResizeKeyboard(true);
-        this.setOneTimeKeyboad(true);
+        keyboardMarkup.setKeyboard(keyboardRows);
+        keyboardMarkup.setResizeKeyboard(true);
+        keyboardMarkup.setOneTimeKeyboard(true);
+        return keyboardMarkup;
     }
 }
