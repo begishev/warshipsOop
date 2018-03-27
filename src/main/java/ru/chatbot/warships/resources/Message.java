@@ -63,7 +63,7 @@ public class Message {
     }
 
     public static String getAttackMessage() {
-        return "Attack is not implemented yet";
+        return "You are on your way to attack port";
     }
 
     public static String getNoSuchPortMessage() {
@@ -92,7 +92,16 @@ public class Message {
     }
 
     public static String getPortTakenBeforeArrivalMessage(Port port) {
-        return "Port" + port.getName() + "was captured by enemy to you decided to turn your ship around";
+        return "Port" + port.getName() + "was captured by enemy, so you decided to turn your ship around";
+    }
+
+    public static String getAttackFailedMessage(Long penalty) {
+        return "Your attack failed, so you paid " + penalty + "penalty for lost battle";
+    }
+
+    public static String getAttackSuceededMessage(Long gold) {
+        return "Your attack succeeded!" + "\n" +
+                "You earn " + gold + " gold as reward";
     }
 
     public static String getArrivalTradeMessage(Port port, Long gold) {

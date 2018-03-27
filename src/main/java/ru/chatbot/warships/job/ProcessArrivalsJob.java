@@ -2,6 +2,7 @@ package ru.chatbot.warships.job;
 
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.chatbot.warships.controller.AttackController;
 import ru.chatbot.warships.controller.TradeController;
 import ru.chatbot.warships.controller.TravelController;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -23,10 +24,19 @@ public class ProcessArrivalsJob extends QuartzJobBean {
         this.tradeController = tradeController;
     }
 
+    @Autowired
+    private AttackController attackController;
+
+    public void setAttackController(AttackController attackController) {
+        this.attackController = attackController;
+    }
+
     @Override
     public void executeInternal(JobExecutionContext context) {
         travelController.processTravelArrivals();
 
         tradeController.processTradeArrivals();
+
+        attackController.processAttackArrivals();
     }
 }

@@ -13,6 +13,7 @@ public class Port {
     Team owner;
     Integer distance;
     Integer reward;
+    Integer power;
 
     public Integer getId() {
         return id;
@@ -70,12 +71,21 @@ public class Port {
         this.reward = reward;
     }
 
-    public Port(Integer id, String name, Integer x, Integer y, Team owner) {
+    public Integer getPower() {
+        return power;
+    }
+
+    public void setPower(Integer power) {
+        this.power = power;
+    }
+
+    public Port(Integer id, String name, Integer x, Integer y, Team owner, Integer power) {
         this.id = id;
         this.name = name;
         this.x = x;
         this.y = y;
         this.owner = owner;
+        this.power = power;
     }
 
     public Port(Integer id, String name, Integer x, Integer y, Team owner, Integer distance, Integer reward) {
@@ -95,7 +105,7 @@ public class Port {
         public Port mapRow(ResultSet rs, int rowNum) {
             try {
                 return new Port(rs.getInt("ID"), rs.getString("NAME"), rs.getInt("X"),
-                        rs.getInt("Y"), Team.valueOf(rs.getInt("OWNER")));
+                        rs.getInt("Y"), Team.valueOf(rs.getInt("OWNER")), rs.getInt("POWER"));
             } catch (SQLException e) {
                 return null;
             }

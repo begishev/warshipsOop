@@ -31,4 +31,6 @@
 
     <bean id="travelController" class="ru.chatbot.warships.controller.TravelController"/>
 
+    <bean id="attackController" class="ru.chatbot.warships.controller.AttackController"/>
+
 </beans>

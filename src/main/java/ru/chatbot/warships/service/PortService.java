@@ -16,7 +16,7 @@ public class PortService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private static final String GET_PORT_SQL = "SELECT ID, NAME, X, Y, OWNER FROM PORT WHERE ID = ?";
+    private static final String GET_PORT_SQL = "SELECT ID, NAME, X, Y, OWNER, POWER FROM PORT WHERE ID = ?";
     private static final String GET_ENEMNY_PORTS_SQL = "SELECT p.ID, p.NAME, p.X, p.Y, p.OWNER, d.DISTANCE, d.REWARD " +
             "FROM PORT p, ROUTE d " +
             "WHERE " +
@@ -39,6 +39,8 @@ public class PortService {
             "AND d.FROM_PORT = p.ID)" +
             ") " +
             "AND p.OWNER = ?";
+
+    private static final String CHANGE_PORT_OWNER_SQL = "UPDATE PORT SET OWNER = ?, POWER = ? WHERE ID = ?";
 
     private static final Integer DEFAULT_LOCATION_BRITAIN = 2;
     private static final Integer DEFAULT_LOCATION_SPAIN = 3;
@@ -65,6 +67,11 @@ public class PortService {
         } catch (DataAccessException e) {
             return null;
         }
+    }
+
+    public void capturePort(Port port) {
+        jdbcTemplate.update(CHANGE_PORT_OWNER_SQL, port.getOwner().getTeamId(), port.getPower(), port.getId());
+
     }
 
     public static Integer getDefaultLocationBritain() {
