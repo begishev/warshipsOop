@@ -23,6 +23,8 @@
     <bean id="travelHandler" class="ru.chatbot.warships.handler.TravelHandler"/>
     <bean id="tradePreparationHandler" class="ru.chatbot.warships.handler.TradePreparationHandler"/>
     <bean id="tradeHandler" class="ru.chatbot.warships.handler.TradeHandler"/>
+    <bean id="attackPreparationHandler" class="ru.chatbot.warships.handler.AttackPreparationHandler"/>
+    <bean id="attackHandler" class="ru.chatbot.warships.handler.AttackHandler"/>
     <bean id="buyShipPreparationHandler" class="ru.chatbot.warships.handler.BuyShipPreparationHandler"/>
     <bean id="buyShipHandler" class="ru.chatbot.warships.handler.BuyShipHandler"/>
 
@@ -42,6 +44,8 @@
             <ref bean="travelHandler"/>
             <ref bean="tradePreparationHandler"/>
             <ref bean="tradeHandler"/>
+            <ref bean="attackPreparationHandler"/>
+            <ref bean="attackHandler"/>
             <ref bean="buyShipPreparationHandler"/>
             <ref bean="buyShipHandler"/>
             <ref bean="defaultHandler"/>

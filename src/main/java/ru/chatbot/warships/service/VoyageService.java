@@ -32,17 +32,27 @@ public class VoyageService {
     private final static String START_ARRIVED_TRADERS_HANDLING_SQL = "update TRADE set STATUS = 1 " +
             "where FINISH_DATE < now() and STATUS = 0";
 
+    private final static String START_ARRIVED_ATTACKERS_HANDLING_SQL = "update ATTACK set STATUS = 1 " +
+            "where FINISH_DATE < now() and STATUS = 0";
+
     private final static String GET_ARRIVED_TRAVELERS_SQL = "select PLAYER_ID, START_DATE, FINISH_DATE, DESTINATION from TRAVEL " +
             "where STATUS = 1";
 
-    private final static String GET_ARRIVED_TRADERS_SQL = "select PLAYER_ID, START_DATE, FINISH_DATE, DESTINATION " +
+    private final static String GET_ARRIVED_TRADERS_SQL = "select PLAYER_ID, LEADER_ID, START_DATE, FINISH_DATE, DESTINATION " +
             "from TRADE " +
+            "where STATUS = 1";
+
+    private final static String GET_ARRIVED_ATTACKERS_SQL = "select PLAYER_ID, LEADER_ID, START_DATE, FINISH_DATE, DESTINATION " +
+            "from ATTACK " +
             "where STATUS = 1";
 
     private final static String FINISH_ARRIVED_TRAVELERS_HANDLING_SQL = "update TRAVEL set STATUS = 2 " +
             "where STATUS = 1";
 
     private final static String FINISH_ARRIVED_TRADERS_HANDLING_SQL = "update TRADE set STATUS = 2 " +
+            "where STATUS = 1";
+
+    private final static String FINISH_ARRIVED_ATTACKERS_HANDLING_SQL = "update ATTACK set STATUS = 2 " +
             "where STATUS = 1";
 
     private final static String CREATE_TRAVEL_SQL = "insert into TRAVEL " +
@@ -53,12 +63,20 @@ public class VoyageService {
             "(PLAYER_ID, LEADER_ID, START_DATE, FINISH_DATE, REWARD, DESTINATION, STATUS) " +
             "values(?, ?, now(), DATEADD('MINUTE', ?, NOW()), ?, ?, 0)";
 
+    private final static String CREATE_ATTACK_SQL = "insert into ATTACK " +
+            "(PLAYER_ID, LEADER_ID, START_DATE, FINISH_DATE, DESTINATION, STATUS) " +
+            "values(?, ?, now(), DATEADD('MINUTE', ?, NOW()), ?, 0)";
+
     private final static String GET_TRAVEL_BY_PLAYER_ID_SQL = "select PLAYER_ID, START_DATE, FINISH_DATE, DESTINATION, STATUS " +
             "from TRAVEL " +
             "where PLAYER_ID = ? and STATUS = 0";
 
     private final static String GET_TRADE_BY_ID_SQL = "select PLAYER_ID, LEADER_ID, START_DATE, FINISH_DATE, REWARD, DESTINATION, STATUS " +
             "from TRADE " +
+            "where PLAYER_ID = ? and STATUS = 0";
+
+    private final static String GET_ATTACK_BY_ID_SQL = "select PLAYER_ID, LEADER_ID, START_DATE, FINISH_DATE, DESTINATION, STATUS " +
+            "from ATTACK " +
             "where PLAYER_ID = ? and STATUS = 0";
 
     public static Long calculateRouteTime(Long distance, Ship ship) {
@@ -73,8 +91,13 @@ public class VoyageService {
             try {
                 return jdbcTemplate.queryForObject(GET_TRADE_BY_ID_SQL,
                         new Object[]{player.getId()}, new Trade.TradeRowMapper());
-            } catch (DataAccessException ex) {
-                return null;
+            } catch (EmptyResultDataAccessException ex) {
+                try {
+                    return jdbcTemplate.queryForObject(GET_ATTACK_BY_ID_SQL,
+                            new Object[]{player.getId()}, new Attack.AttackRowMapper());
+                } catch (DataAccessException ex1) {
+                    return null;
+                }
             }
         } catch (DataAccessException e) {
             return null;
@@ -136,4 +159,31 @@ public class VoyageService {
         jdbcTemplate.update(FINISH_ARRIVED_TRADERS_HANDLING_SQL);
     }
 
+    public void createAttack(Player player, Player leader, Integer from, Integer to) {
+        try {
+            Ship ship = shipService.getEmployedShip(player.getId());
+            Route route = jdbcTemplate.queryForObject(GET_DISTANCE_SQL, new Object[]{from, to, from, to}, new Route.RouteRowMapper());
+            Long routeTime = calculateRouteTime(route.getDistance(), ship);
+            jdbcTemplate.update(CREATE_ATTACK_SQL, player.getId(), leader.getId(), routeTime, to);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Attack> startHandlingArrivedAttackers() {
+        try {
+            jdbcTemplate.update(START_ARRIVED_ATTACKERS_HANDLING_SQL);
+            return jdbcTemplate.queryForList(GET_ARRIVED_ATTACKERS_SQL).stream()
+                    .map(rs -> new Attack((Integer) rs.get("PLAYER_ID"), (Integer) rs.get("LEADER_ID"),
+                            (Integer) rs.get("DESTINATION"), (Timestamp) rs.get("START_DATE"),
+                            (Timestamp) rs.get("FINISH_DATE"), 1))
+                    .collect(Collectors.toList());
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    public void finishHandlingArrivedAttackers() {
+        jdbcTemplate.update(FINISH_ARRIVED_ATTACKERS_HANDLING_SQL);
+    }
 }
