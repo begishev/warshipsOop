@@ -54,6 +54,8 @@ public class ShipService {
 
     /**
      * returns ship which is currently used by player
+     *
+     * @return ship which is now used by user
      **/
     public Ship getEmployedShip(Integer userId) {
         try {
@@ -65,6 +67,7 @@ public class ShipService {
 
     /**
      * Generate ship with random stats with given mean and deviation for this ship type
+     *
      * @param shipName name chosen by player
      * @param ownerId id of Player entity
      * @param typeId id of ShipType entity
@@ -90,6 +93,11 @@ public class ShipService {
         jdbcTemplate.update(RENAME_SHIP_SQL, new Object[]{name, playerId});
     }
 
+    /**
+     * List all existing ship types
+     *
+     * @return all ship types
+     */
     public List<ShipType> getShipTypes() {
         try {
             return jdbcTemplate.query(GET_SHIP_TYPES_SQL, new ShipType.ShipTypeRowMapper());

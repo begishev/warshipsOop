@@ -49,6 +49,11 @@ public class PlayerService {
         }
     }
 
+    /**
+     * Create user with default ship in default location
+     *
+     * @throws DataAccessException
+     */
     public void createPlayer(Integer userId, Long chatId, String nickname, Team team) throws DataAccessException {
         jdbcTemplate.update(INSERT_PLAYER_SQL, new Object[]{userId, chatId, nickname, team.getTeamId()});
         shipService.createShip("My first ship", userId, DEFAULT_SHIP_ID, getPlayerLocation(userId));
@@ -56,7 +61,10 @@ public class PlayerService {
 
     /**
      * Player location is location of currently employed ship
+     *
      * If player has no ship then it returns default port for every team
+     * @param id particular player's id
+     * @return location id
      */
     public Integer getPlayerLocation(Integer id) {
         Player player = getPlayer(id);
@@ -96,10 +104,16 @@ public class PlayerService {
         }
     }
 
+    /**
+     * Change amount of player's gold by selected number
+     */
     public void giveGold(Player player, Long gold) {
         jdbcTemplate.update(INCREASE_GOLD_SQL, gold, player.getId());
     }
 
+    /**
+     * Change user nickname
+     */
     public void setNickname(Integer playerId, String nickname) {
         jdbcTemplate.update(CHANGE_NICKNAME_SQL, nickname, playerId);
     }

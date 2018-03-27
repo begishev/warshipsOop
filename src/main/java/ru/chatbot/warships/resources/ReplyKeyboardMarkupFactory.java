@@ -7,6 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReplyKeyboardMarkupFactory {
+    /**
+     * Produce good-looking custom keyboard with specified set of buttons
+     *
+     * @param buttons texts for buttons
+     * @return internal representation of keyboard
+     */
     public ReplyKeyboardMarkup produceKeyboardMarkupWithButtons(List<String> buttons) {
         int rows = (buttons.size() - 1) / 3 + 1;
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();

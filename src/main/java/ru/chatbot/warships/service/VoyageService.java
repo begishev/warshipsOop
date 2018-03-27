@@ -83,6 +83,11 @@ public class VoyageService {
         return distance / ship.getSpeed();
     }
 
+    /**
+     * Search for any type of movement for specified user
+     *
+     * @return null if user is not involved in any activity or activity representation otherwise
+     */
     public Voyage getVoyage(Player player) {
         try {
             return jdbcTemplate.queryForObject(GET_TRAVEL_BY_PLAYER_ID_SQL,
@@ -115,6 +120,11 @@ public class VoyageService {
         }
     }
 
+    /**
+     * Mark all finished travels as `in processing` and get them
+     *
+     * @return list of finished travels
+     */
     public List<Travel> startHandlingArrivedTravelers() {
         try {
             jdbcTemplate.update(START_ARRIVED_TRAVELERS_HANDLING_SQL);
@@ -127,6 +137,9 @@ public class VoyageService {
         }
     }
 
+    /**
+     * Mark all travels `in processing` as `processed`
+     */
     public void finishHandlingArrivedTravelers() {
         jdbcTemplate.update(FINISH_ARRIVED_TRAVELERS_HANDLING_SQL);
     }
@@ -142,6 +155,11 @@ public class VoyageService {
         }
     }
 
+    /**
+     * Mark all finished trades as `in processing` and get them
+     *
+     * @return list of finished trades
+     */
     public List<Trade> startHandlingArrivedTraders() {
         try {
             jdbcTemplate.update(START_ARRIVED_TRADERS_HANDLING_SQL);
@@ -155,6 +173,9 @@ public class VoyageService {
         }
     }
 
+    /**
+     * Mark all trades `in processing` as `processed`
+     */
     public void finishHandlingArrivedTraders() {
         jdbcTemplate.update(FINISH_ARRIVED_TRADERS_HANDLING_SQL);
     }
@@ -170,6 +191,11 @@ public class VoyageService {
         }
     }
 
+    /**
+     * Mark all finished attacks as `in processing` and get them
+     *
+     * @return list of finished attacks
+     */
     public List<Attack> startHandlingArrivedAttackers() {
         try {
             jdbcTemplate.update(START_ARRIVED_ATTACKERS_HANDLING_SQL);
@@ -183,6 +209,9 @@ public class VoyageService {
         }
     }
 
+    /**
+     * Mark all attacks `in processing` as `processed`
+     */
     public void finishHandlingArrivedAttackers() {
         jdbcTemplate.update(FINISH_ARRIVED_ATTACKERS_HANDLING_SQL);
     }
