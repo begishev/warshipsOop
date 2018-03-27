@@ -24,7 +24,7 @@ public class TravelHandlerTest {
         when(update.getMessage()).thenReturn(message);
         when(message.getText()).thenReturn("/travel_1");
         assertTrue(travelHandler.matchCommand(update));
-        when(message.getText()).thenReturn("/tavel_5");
+        when(message.getText()).thenReturn("/travel_5");
         assertTrue(travelHandler.matchCommand(update));
         when(message.getText()).thenReturn("hack-hack");
         assertTrue(!travelHandler.matchCommand(update));
