@@ -152,7 +152,7 @@ public class Message {
     }
 
     public static String getShipBoughtMessage(Ship ship) {
-        return "Your nickname successfully bought new ship with stats:" + "\n" +
+        return "You successfully bought new ship with stats:" + "\n" +
                 "    Power:   " + ship.getPower().toString() + "\n" +
                 "    Speed:   " + ship.getSpeed().toString() + "\n" +
                 "    Tonnage: " + ship.getTonnage().toString() + "\n" +
