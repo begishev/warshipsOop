@@ -26,7 +26,7 @@ public class TradeHandlerTest {
         assertTrue(tradeHandler.matchCommand(update));
         when(message.getText()).thenReturn("/trade_25");
         assertTrue(tradeHandler.matchCommand(update));
-        when(message.getText()).thenReturn("/trave_5");
+        when(message.getText()).thenReturn("/travel_5");
         assertTrue(!tradeHandler.matchCommand(update));
     }
 }
