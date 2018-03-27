@@ -38,7 +38,7 @@ public class VoyageService {
     private final static String GET_ARRIVED_TRAVELERS_SQL = "select PLAYER_ID, START_DATE, FINISH_DATE, DESTINATION from TRAVEL " +
             "where STATUS = 1";
 
-    private final static String GET_ARRIVED_TRADERS_SQL = "select PLAYER_ID, LEADER_ID, START_DATE, FINISH_DATE, DESTINATION " +
+    private final static String GET_ARRIVED_TRADERS_SQL = "select PLAYER_ID, LEADER_ID, START_DATE, FINISH_DATE, DESTINATION, REWARD " +
             "from TRADE " +
             "where STATUS = 1";
 
