@@ -53,6 +53,14 @@ public class PortService {
         }
     }
 
+    /**
+     * Get all ports which belong to the enemy fraction and can be accessed from specified location
+     *
+     * This method may be used to get list of attack directions from current user's location
+     * @param portId current player's location
+     * @param team player's team
+     * @return list of accessible enemy ports
+     */
     public List<Port> getEnemyPorts(Integer portId, Team team) {
         try {
             return jdbcTemplate.query(GET_ENEMNY_PORTS_SQL, new Object[]{portId, portId, team.getTeamId()}, new Port.PortWithDistanceRowMapper());
@@ -61,6 +69,14 @@ public class PortService {
         }
     }
 
+    /**
+     * Get all ports which belong to the same fraction and can be accessed from specified location
+     *
+     * This method may be used to get list of trade routes from current user's location
+     * @param portId current player's location
+     * @param team player's team
+     * @return list of accessible ally ports
+     */
     public List<Port> getAllyPorts(Integer portId, Team team) {
         try {
             return jdbcTemplate.query(GET_ALLY_PORTS_SQL, new Object[]{portId, portId, team.getTeamId()}, new Port.PortWithDistanceRowMapper());
@@ -69,6 +85,12 @@ public class PortService {
         }
     }
 
+    /**
+     * Update information about port based on passed argument
+     *
+     * Change port owner and decrease power of fortification
+     * @param port object storing new owner and new power
+     */
     public void capturePort(Port port) {
         jdbcTemplate.update(CHANGE_PORT_OWNER_SQL, port.getOwner().getTeamId(), port.getPower(), port.getId());
 
