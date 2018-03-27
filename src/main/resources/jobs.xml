@@ -6,10 +6,7 @@
         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
        default-autowire="byName">
 
-    <bean id="processArrivalsJob" class="ru.chatbot.warships.job.ProcessArrivalsJob">
-        <property name="tradeController" ref="tradeController"/>
-        <property name="travelController" ref="travelController"/>
-    </bean>
+    <bean id="processArrivalsJob" class="ru.chatbot.warships.job.ProcessArrivalsJob"/>
 
     <bean id="jobFactory" class="ru.chatbot.warships.job.AutowiringSpringBeanJobFactory"/>
 

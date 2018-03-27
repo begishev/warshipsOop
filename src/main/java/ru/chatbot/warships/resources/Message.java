@@ -96,7 +96,7 @@ public class Message {
     }
 
     public static String getAttackFailedMessage(Long penalty) {
-        return "Your attack failed, so you paid " + penalty + "penalty for lost battle";
+        return "Your attack failed, so you paid " + penalty + " penalty for lost battle";
     }
 
     public static String getAttackSuceededMessage(Long gold) {
