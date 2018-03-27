@@ -2,6 +2,10 @@ group 'ru.chatbot'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'ru.chatbot.warships.Main'
+
 
 sourceCompatibility = 1.8
 
