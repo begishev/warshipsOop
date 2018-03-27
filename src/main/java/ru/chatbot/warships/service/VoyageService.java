@@ -166,7 +166,7 @@ public class VoyageService {
             return jdbcTemplate.queryForList(GET_ARRIVED_TRADERS_SQL).stream()
                     .map(rs -> new Trade((Integer) rs.get("PLAYER_ID"), (Integer) rs.get("LEADER_ID"),
                             (Integer) rs.get("DESTINATION"), (Timestamp) rs.get("START_DATE"),
-                            (Timestamp) rs.get("FINISH_DATE"), 1, (Integer) rs.get("REWARD"))
+                            (Timestamp) rs.get("FINISH_DATE"), 1, (Integer) rs.get("REWARD")))
                     .collect(Collectors.toList());
         } catch (DataAccessException e) {
             return null;
