@@ -2,41 +2,45 @@ package ru.chatbot.warships.job;
 
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.chatbot.warships.controller.AttackController;
-import ru.chatbot.warships.controller.TradeController;
-import ru.chatbot.warships.controller.TravelController;
+import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.exceptions.TelegramApiException;
+import ru.chatbot.warships.bot.WarshipsBot;
+import ru.chatbot.warships.controller.AttackProcessor;
+import ru.chatbot.warships.controller.Processor;
+import ru.chatbot.warships.controller.TradeProcessor;
+import ru.chatbot.warships.controller.TravelProcessor;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+
+import java.util.List;
 
 
 public class ProcessArrivalsJob extends QuartzJobBean {
 
     @Autowired
-    private TravelController travelController;
+    private WarshipsBot warshipsBot;
 
-    public void setTravelController(TravelController travelController) {
-        this.travelController = travelController;
+    public void setWarshipsBot(WarshipsBot warshipsBot) {
+        this.warshipsBot = warshipsBot;
     }
 
     @Autowired
-    private TradeController tradeController;
+    List<Processor> processors;
 
-    public void setTradeController(TradeController tradeController) {
-        this.tradeController = tradeController;
-    }
-
-    @Autowired
-    private AttackController attackController;
-
-    public void setAttackController(AttackController attackController) {
-        this.attackController = attackController;
+    public void setProcessors(List<Processor> processors) {
+        this.processors = processors;
     }
 
     @Override
     public void executeInternal(JobExecutionContext context) {
-        travelController.processTravelArrivals();
-
-        tradeController.processTradeArrivals();
-
-        attackController.processAttackArrivals();
+        for (Processor processor : processors) {
+            List<SendMessage> messages = processor.process();
+            for (SendMessage message : messages) {
+                try {
+                    warshipsBot.sendMessage(message);
+                } catch (TelegramApiException e) {
+                    System.out.println(e);
+                }
+            }
+        }
     }
 }

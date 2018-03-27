@@ -54,4 +54,19 @@
         </list>
     </constructor-arg>
     </bean>
+
+    <bean id="tradeProcessor" class="ru.chatbot.warships.controller.TradeProcessor"/>
+    <bean id="travelProcessor" class="ru.chatbot.warships.controller.TravelProcessor"/>
+    <bean id="attackProcessor" class="ru.chatbot.warships.controller.AttackProcessor"/>
+
+    <bean id="processors" class="java.util.ArrayList">
+        <constructor-arg>
+            <list>
+                <ref bean="travelProcessor"/>
+                <ref bean="tradeProcessor"/>
+                <ref bean="attackProcessor"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
 </beans>
