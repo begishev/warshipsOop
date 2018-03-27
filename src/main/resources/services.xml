@@ -26,11 +26,4 @@
     <bean id="shipService" class="ru.chatbot.warships.service.ShipService"/>
 
     <bean id="voyageService" class="ru.chatbot.warships.service.VoyageService"/>
-
-    <bean id="tradeController" class="ru.chatbot.warships.controller.TradeController"/>
-
-    <bean id="travelController" class="ru.chatbot.warships.controller.TravelController"/>
-
-    <bean id="attackController" class="ru.chatbot.warships.controller.AttackController"/>
-
 </beans>

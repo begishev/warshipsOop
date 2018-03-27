@@ -7,23 +7,18 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import ru.chatbot.warships.bot.WarshipsBot;
 import ru.chatbot.warships.entity.Player;
 import ru.chatbot.warships.entity.Port;
-import ru.chatbot.warships.entity.Trade;
+import ru.chatbot.warships.entity.Travel;
 import ru.chatbot.warships.resources.ReplyKeyboardMarkupFactory;
 import ru.chatbot.warships.resources.Message;
 import ru.chatbot.warships.service.PlayerService;
 import ru.chatbot.warships.service.PortService;
 import ru.chatbot.warships.service.VoyageService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TradeController {
-    @Autowired
-    private WarshipsBot warshipsBot;
-
-    public void setWarshipsBot(WarshipsBot warshipsBot) {
-        this.warshipsBot = warshipsBot;
-    }
+public class TravelProcessor implements Processor {
 
     @Autowired
     private PlayerService playerService;
@@ -53,28 +48,24 @@ public class TradeController {
         this.markupFactory = markupFactory;
     }
 
-    public void processTradeArrivals() {
-        List<Trade> arrivedTraders = voyageService.startHandlingArrivedTraders();
-        for (Trade voyage : arrivedTraders) {
-            SendMessage message = this.processTradeArrival(voyage);
-            try {
-                warshipsBot.sendMessage(message);
-            } catch (TelegramApiException e) {
-                System.out.println(e);
-            }
+    public List<SendMessage> process() {
+        List<Travel> arrivedTravelers = voyageService.startHandlingArrivedTravelers();
+        List<SendMessage> messages = new ArrayList<>();
+        for (Travel voyage : arrivedTravelers) {
+            SendMessage message = this.processTravelArrival(voyage);
+            messages.add(message);
         }
-        voyageService.finishHandlingArrivedTraders();
+        voyageService.finishHandlingArrivedTravelers();
+        return messages;
     }
 
-    private SendMessage processTradeArrival(Trade voyage) {
+    private SendMessage processTravelArrival(Travel voyage) {
         Player player = playerService.getPlayer(voyage.getPlayerId());
         Port port = portService.getPort(voyage.getDestination());
-        SendMessage message;
         ReplyKeyboardMarkup keyboard = markupFactory.produceKeyboardMarkupWithButtons(Arrays.asList("INFO", "VOYAGE", "BUY SHIP"));
+        SendMessage message;
         if (playerService.arrive(player, port)) {
-            playerService.giveGold(player, Long.valueOf(voyage.getReward()));
-            message = Message.makeReplyMessage(player.getChatId(),
-                    Message.getArrivalTradeMessage(port, Long.valueOf(voyage.getReward())),
+            message = Message.makeReplyMessage(player.getChatId(), Message.getArrivalMessage(port),
                     keyboard);
         } else {
             message = Message.makeReplyMessage(player.getChatId(), Message.getPortTakenBeforeArrivalMessage(port),

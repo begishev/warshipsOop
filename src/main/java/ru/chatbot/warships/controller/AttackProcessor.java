@@ -13,17 +13,11 @@ import ru.chatbot.warships.service.PortService;
 import ru.chatbot.warships.service.ShipService;
 import ru.chatbot.warships.service.VoyageService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AttackController {
-    @Autowired
-    private WarshipsBot warshipsBot;
-
-    public void setWarshipsBot(WarshipsBot warshipsBot) {
-        this.warshipsBot = warshipsBot;
-    }
-
+public class AttackProcessor implements Processor {
     @Autowired
     private PlayerService playerService;
 
@@ -59,17 +53,15 @@ public class AttackController {
         this.markupFactory = markupFactory;
     }
 
-    public void processAttackArrivals() {
+    public List<SendMessage> process() {
         List<Attack> arrivedAttackers = voyageService.startHandlingArrivedAttackers();
+        List<SendMessage> messages = new ArrayList<>();
         for (Attack voyage : arrivedAttackers) {
             SendMessage message = this.processAttackArrival(voyage);
-            try {
-                warshipsBot.sendMessage(message);
-            } catch (TelegramApiException e) {
-                System.out.println(e);
-            }
+            messages.add(message);
         }
         voyageService.finishHandlingArrivedAttackers();
+        return messages;
     }
 
     private SendMessage processAttackArrival(Attack voyage) {
